@@ -1,0 +1,11 @@
+name: "Dahua2MQTT"
+description: "My first real add-on!"
+version: "0.0.1"
+slug: "dahua2mqtt"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
