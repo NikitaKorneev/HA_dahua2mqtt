@@ -5,14 +5,16 @@ app = Flask(__name__)
 
 MQTT_BROKER = "127.0.0.1"
 MQTT_PORT = 1883
-MQTT_TOPIC = "/nvr"
+MQTT_TOPIC = "/dahua2mqtt/"
+MQTT_USERNAME = "mqtt"
+MQTT_PASSWORD = "^QRLjWEsNq3Xg^hA"
 
 
 @app.route('/dahua', methods=['POST'])
 def dahua_event():
     data = request.json
-    # print(f"Received data: {data}")  # For logging/debugging purposes
-    publish.single(MQTT_TOPIC, payload=str(data), hostname=MQTT_BROKER, port=MQTT_PORT)
+    print(f"Received data: {data}")  # For logging/debugging purposes
+    publish.single(MQTT_TOPIC, payload=str(data), hostname=MQTT_BROKER, port=MQTT_PORT, auth={'username': MQTT_USERNAME, 'password': MQTT_PASSWORD})
     return "Data forwarded to MQTT", 200
 
 
