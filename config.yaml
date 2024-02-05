@@ -9,3 +9,6 @@ arch:
   - armhf
   - armv7
   - i386
+startup: services
+ports:
+  52345/tcp: 52345
