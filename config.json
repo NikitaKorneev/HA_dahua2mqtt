@@ -1,0 +1,10 @@
+{
+  "name": "Dahua to MQTT",
+  "version": "0.1",
+  "slug": "dahua_mqtt",
+  "description": "Listens for Dahua NVR HTTP notifications and forwards them to MQTT",
+  "startup": "application",
+  "boot": "auto",
+  "options": {},
+  "schema": {}
+}
