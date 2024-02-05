@@ -5,12 +5,12 @@ app = Flask(__name__)
 
 MQTT_BROKER = "127.0.0.1"
 MQTT_PORT = 1883
-MQTT_TOPIC = "/dahua2mqtt/"
+MQTT_TOPIC = "dahua2mqtt/"
 MQTT_USERNAME = "mqtt"
 MQTT_PASSWORD = "^QRLjWEsNq3Xg^hA"
 
 
-@app.route('/dahua', methods=['POST'])
+@app.route('/cgi-bin/NotifyEvent', methods=['POST'])
 def dahua_event():
     data = request.json
     print(f"Received data: {data}")  # For logging/debugging purposes
