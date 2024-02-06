@@ -9,6 +9,7 @@ MQTT_BROKER = os.getenv("OPTIONS_MQTT_BROKER")
 MQTT_PORT = os.getenv("OPTIONS_MQTT_PORT")
 MQTT_USERNAME = os.getenv("OPTIONS_MQTT_USERNAME")
 MQTT_PASSWORD = os.getenv("OPTIONS_MQTT_PASSWORD")
+print(f"Imported conf vars:\n{MQTT_BROKER}\n{MQTT_PORT}\n{MQTT_USERNAME}\n{MQTT_PASSWORD}")
 
 # Main section that sets up topics for appropriate "AI" events from NVR
 MQTT_TOPIC_FACE_RECOGNIZED = os.getenv("OPTIONS_MQTT_TOPIC_FACE_RECOGNIZED")
@@ -43,7 +44,7 @@ def dahua_event():
                 topic=MQTT_TOPIC_FACE_RECOGNIZED,
                 payload=json.dumps(recognised_face_payload),
                 hostname=MQTT_BROKER,
-                port=int(MQTT_PORT),
+                port=MQTT_PORT,
                 auth={
                     'username': MQTT_USERNAME,
                     'password': MQTT_PASSWORD,
@@ -59,7 +60,7 @@ def dahua_event():
                 topic=MQTT_TOPIC_FACE_STRANGER,
                 payload=json.dumps(stranger_face_payload),
                 hostname=MQTT_BROKER,
-                port=int(MQTT_PORT),
+                port=MQTT_PORT,
                 auth={
                     'username': MQTT_USERNAME,
                     'password': MQTT_PASSWORD,
@@ -75,7 +76,7 @@ def dahua_event():
             topic=MQTT_TOPIC_SMD_HUMAN,
             payload=json.dumps(smd_human_payload),
             hostname=MQTT_BROKER,
-            port=int(MQTT_PORT),
+            port=MQTT_PORT,
             auth={
                 'username': MQTT_USERNAME,
                 'password': MQTT_PASSWORD,
@@ -91,7 +92,7 @@ def dahua_event():
             topic=MQTT_TOPIC_SMD_HUMAN,
             payload=json.dumps(smd_car_payload),
             hostname=MQTT_BROKER,
-            port=int(MQTT_PORT),
+            port=MQTT_PORT,
             auth={
                 'username': MQTT_USERNAME,
                 'password': MQTT_PASSWORD
