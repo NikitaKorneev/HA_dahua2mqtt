@@ -41,7 +41,8 @@ def dahua_event():
         smd_payload = {
             "state": "ON",  # Turn the binary sensor ON
             "attributes": {
-                "nvr_channel": data['Data']['Data']['Index'],
+                "nvr_channel": data['Data'][
+                ['Index'],
             }
         }
 
