@@ -7,5 +7,6 @@ COPY . /app
 RUN chmod +x /app/run.sh
 RUN ls -la /app  # List files in /app to verify that run.sh is there
 CMD ["/app/run.sh"]
-CMD ["app/run.sh"]
-CMD ["run.sh"]
+CMD ["ls"]
+CMD ["ls -la /"]
+CMD ["ls -la /app"]
