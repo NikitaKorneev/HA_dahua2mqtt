@@ -17,7 +17,7 @@ ports:
 
 options:
   mqtt_broker: "core-mosquitto"
-  mqtt_port: 1883
+  mqtt_port: "1883"
   mqtt_username: "mqtt"
   mqtt_password: "mqtt"
   mqtt_topic_face_recognized: "dahua2mqtt/face/recognized/state"
@@ -26,10 +26,10 @@ options:
   mqtt_topic_smd_car: "dahua2mqtt/smd/car/state"
 schema:
   mqtt_broker: str
-  mqtt_port: int
-  mqtt_login: str
-  mqtt_pw: str
-  mqtt_face_recognized_topic: str
-  mqtt_face_stranger_topic: str
-  mqtt_smd_human: str
-  mqtt_smd_car: str
+  mqtt_port: str
+  mqtt_username: str
+  mqtt_password: str
+  mqtt_topic_face_recognized: str
+  mqtt_topic_face_stranger: str
+  mqtt_topic_smd_human: str
+  mqtt_topic_smd_car: str
