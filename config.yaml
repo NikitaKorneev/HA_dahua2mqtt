@@ -12,9 +12,3 @@ arch:
 startup: services
 ports:
   52345/tcp: 52345
-options:
-  mqtt_login: mqtt
-  mqtt_password: mqtt
-schema:
-  mqtt_login: str
-  mqtt_password: str
