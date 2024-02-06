@@ -9,6 +9,30 @@ arch:
   - armhf
   - armv7
   - i386
+
 startup: services
+
 ports:
   52345/tcp: 52345
+
+options:
+  mqtt_broker: "core-mosquitto"
+  mqtt_port: "1883"
+  mqtt_username: "mqtt"
+  mqtt_password: "mqtt"
+
+  mqtt_topic_face_recognized: "dahua2mqtt/face/recognized/state"
+  mqtt_topic_face_stranger: "dahua2mqtt/face/stranger/state"
+  mqtt_topic_smd_human: "dahua2mqtt/smd/human/state"
+  mqtt_topic_smd_car: "dahua2mqtt/smd/car/state"
+
+schema:
+  mqtt_broker: str
+  mqtt_port: int
+  mqtt_login: str
+  mqtt_pw: str
+
+  mqtt_face_recognized_topic: str
+  mqtt_face_stranger_topic: str
+  mqtt_smd_human: str
+  mqtt_smd_car: str
