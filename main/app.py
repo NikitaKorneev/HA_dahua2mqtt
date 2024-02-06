@@ -4,6 +4,7 @@ import os
 import json
 print(os.getcwd())
 print(os.listdir())
+print(os.listdir("../"))
 app = Flask(__name__)
 # mqtt broker options are set up from HA addon options
 MQTT_BROKER = os.getenv("OPTIONS_MQTT_BROKER")
