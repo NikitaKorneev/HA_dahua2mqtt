@@ -1,6 +1,3 @@
-ARG BUILD_FROM
-FROM $BUILD_FROM
-
 FROM python:3.9-slim
 RUN pip install -r requirements.txt
 COPY run.sh /
