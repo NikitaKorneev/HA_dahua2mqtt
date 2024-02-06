@@ -6,7 +6,7 @@ import json
 app = Flask(__name__)
 # mqtt broker options are set up from HA addon options
 MQTT_BROKER = os.getenv("OPTIONS_MQTT_BROKER")
-MQTT_PORT = int(os.getenv("OPTIONS_MQTT_PORT"))
+MQTT_PORT = os.getenv("OPTIONS_MQTT_PORT")
 MQTT_USERNAME = os.getenv("OPTIONS_MQTT_USERNAME")
 MQTT_PASSWORD = os.getenv("OPTIONS_MQTT_PASSWORD")
 
@@ -43,7 +43,7 @@ def dahua_event():
                 topic=MQTT_TOPIC_FACE_RECOGNIZED,
                 payload=json.dumps(recognised_face_payload),
                 hostname=MQTT_BROKER,
-                port=MQTT_PORT,
+                port=int(MQTT_PORT),
                 auth={
                     'username': MQTT_USERNAME,
                     'password': MQTT_PASSWORD,
@@ -59,7 +59,7 @@ def dahua_event():
                 topic=MQTT_TOPIC_FACE_STRANGER,
                 payload=json.dumps(stranger_face_payload),
                 hostname=MQTT_BROKER,
-                port=MQTT_PORT,
+                port=int(MQTT_PORT),
                 auth={
                     'username': MQTT_USERNAME,
                     'password': MQTT_PASSWORD,
@@ -75,7 +75,7 @@ def dahua_event():
             topic=MQTT_TOPIC_SMD_HUMAN,
             payload=json.dumps(smd_human_payload),
             hostname=MQTT_BROKER,
-            port=MQTT_PORT,
+            port=int(MQTT_PORT),
             auth={
                 'username': MQTT_USERNAME,
                 'password': MQTT_PASSWORD,
@@ -91,7 +91,7 @@ def dahua_event():
             topic=MQTT_TOPIC_SMD_HUMAN,
             payload=json.dumps(smd_car_payload),
             hostname=MQTT_BROKER,
-            port=MQTT_PORT,
+            port=int(MQTT_PORT),
             auth={
                 'username': MQTT_USERNAME,
                 'password': MQTT_PASSWORD
