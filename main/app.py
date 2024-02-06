@@ -40,6 +40,7 @@ def dahua_event():
 
     # Check for FaceRecognition in the received data
     if data.get('Code') == 'FaceRecognition':
+        print("FACE RECOGNIZED!!!", data)
         # Event if face is recognized
         if data["Data"]["Candidates"]:
             # Create a payload for the MQTT message
