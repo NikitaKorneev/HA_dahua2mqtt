@@ -11,4 +11,4 @@ export MQTT_PASSWORD=$(echo $CONFIG | jq -r '.mqtt_password')
 # ... add other configuration options as needed
 
 # Start the main Python application
-python /app/app.py
+python3 app.py
