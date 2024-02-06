@@ -1,7 +1,8 @@
+ARG BUILD_FROM
+FROM $BUILD_FROM
+
 FROM python:3.9-slim
-WORKDIR /app
-COPY requirements.txt /app
 RUN pip install -r requirements.txt
-COPY . /app
-RUN chmod +x /app/run.sh
-CMD ["/app/run.sh"]
+COPY run.sh /
+RUN chmod a+x /run.sh
+CMD ["/run.sh"]
