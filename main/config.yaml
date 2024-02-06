@@ -1,6 +1,6 @@
 name: "Dahua2MQTT"
-description: "My first real add-on!"
-version: "0.0.1"
+description: "Get the HTTP alarms from your Dahua NVR (or other) in Home Assistant's MQTT broker"
+version: "0.1.0"
 slug: "dahua2mqtt"
 init: false
 arch:
