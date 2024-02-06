@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bashio
 
 # Fetch the add-on options using the Supervisor API
-CONFIG_PATH=/data/options.json
+CONFIG=/main/config.yaml
 
 # Export the options as environment variables
 MQTT_BROKER="$(bashio::config 'mqtt_broker')"
