@@ -2,22 +2,32 @@ from flask import Flask, request
 import paho.mqtt.publish as publish
 import os
 import json
-print(os.getcwd())
-print(os.listdir())
-print(os.listdir("../data"))
+# Define the path to the options.json file
+options_file_path = os.path.join(os.path.dirname(__file__), '../data/options.json')
+
+# Initialize a variable to store your options
+options = {}
+
+# Read the options.json file
+try:
+    with open(options_file_path, 'r') as file:
+        options = json.load(file)
+except Exception as e:
+    print(f"Error reading the options.json file: {e}")
+
 app = Flask(__name__)
 # mqtt broker options are set up from HA addon options
-MQTT_BROKER = os.getenv("OPTIONS_MQTT_BROKER")
-MQTT_PORT = os.getenv("OPTIONS_MQTT_PORT")
-MQTT_USERNAME = os.getenv("OPTIONS_MQTT_USERNAME")
-MQTT_PASSWORD = os.getenv("OPTIONS_MQTT_PASSWORD")
+MQTT_BROKER = options.get("mqtt_broker")
+MQTT_PORT = options.get("mqtt_port")
+MQTT_USERNAME = options.get("mqtt_username")
+MQTT_PASSWORD = options.get("mqtt_password")
 print(f"Imported conf vars:\n{MQTT_BROKER}\n{MQTT_PORT}\n{MQTT_USERNAME}\n{MQTT_PASSWORD}")
 
 # Main section that sets up topics for appropriate "AI" events from NVR
-MQTT_TOPIC_FACE_RECOGNIZED = os.getenv("OPTIONS_MQTT_TOPIC_FACE_RECOGNIZED")
-MQTT_TOPIC_FACE_STRANGER = os.getenv("OPTIONS_MQTT_TOPIC_FACE_STRANGER")
-MQTT_TOPIC_SMD_HUMAN = os.getenv("OPTIONS_MQTT_TOPIC_SMD_HUMAN")
-MQTT_TOPIC_SMD_CAR = os.getenv("OPTIONS_MQTT_TOPIC_SMD_CAR")
+MQTT_TOPIC_FACE_RECOGNIZED = options.get("mqtt_topic_face_recognized")
+MQTT_TOPIC_FACE_STRANGER = options.get("mqtt_topic_face_stranger")
+MQTT_TOPIC_SMD_HUMAN = options.get("mqtt_topic_smd_human")
+MQTT_TOPIC_SMD_CAR = options.get("mqtt_topic_smd_car")
 
 
 @app.route(
