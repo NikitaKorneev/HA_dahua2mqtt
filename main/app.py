@@ -65,8 +65,10 @@ def dahua_event():
     # print(f"Received data: Action: {data.get('Action')}, {data.get('Code')}")  # For logging/debugging purposes
     # FACE RECOGNITION SECTION
     if data.get('Code') == 'FaceRecognition':
+        print("Face recognition event:", end='')
 
         if data["Data"]["Candidates"]:  # Event if face is recognized
+            print("Person:", data['Data']['Candidates'][0]['Person']['Name'])
 
             # Create a payload for the MQTT message
             recognised_face_payload = {
@@ -90,6 +92,7 @@ def dahua_event():
             )
 
         else:  # Event if face is NOT recognized
+            print("Stranger detected", end='')
             stranger_face_payload = {
                 "state": "ON",  # Turn the binary sensor ON
             }
@@ -106,6 +109,7 @@ def dahua_event():
             )
 
     elif data.get('Code') == 'SmartMotionHuman':
+        print("SMD human event")
         smd_human_payload = {
             "state": "ON",  # Turn the binary sensor ON
         }
@@ -122,6 +126,7 @@ def dahua_event():
         )
 
     elif data.get('Code') == 'SmartMotionCar':
+        print("SMD car event")
         smd_car_payload = {
             "state": "ON",  # Turn the binary sensor ON
         }
@@ -137,7 +142,7 @@ def dahua_event():
             }
         )
     topic_reset()
-    return "Data forwarded to MQTT", 200
+    return print("Data forwarded to MQTT", 200)
 
 
 if __name__ == '__main__':
