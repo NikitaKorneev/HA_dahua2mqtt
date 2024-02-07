@@ -132,7 +132,7 @@ def dahua_event():
         }
 
         publish.single(
-            topic=MQTT_TOPIC_SMD_HUMAN,
+            topic=MQTT_TOPIC_SMD_CAR,
             payload=json.dumps(smd_car_payload),
             hostname=MQTT_BROKER,
             port=MQTT_PORT,
