@@ -141,7 +141,8 @@ def dahua_event():
                 'password': MQTT_PASSWORD
             }
         )
-    return print("Data forwarded to MQTT", 200)
+
+    return "Data forwarded to MQTT", 200
 
 
 if __name__ == '__main__':
