@@ -53,7 +53,7 @@ def topic_reset():
 app = Flask(__name__)
 
 print("Addon started. Listening...")
-topic_reset()
+# topic_reset()
 
 
 @app.route(
