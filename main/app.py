@@ -141,7 +141,6 @@ def dahua_event():
                 'password': MQTT_PASSWORD
             }
         )
-    topic_reset()
     return print("Data forwarded to MQTT", 200)
 
 
