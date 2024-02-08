@@ -48,12 +48,13 @@ def topic_reset():
                 'password': MQTT_PASSWORD,
             }
         )
+    print("Topics reset success")
 
 
 app = Flask(__name__)
 
 print("Addon started. Listening...")
-# topic_reset()
+topic_reset()
 
 
 @app.route(
@@ -141,9 +142,9 @@ def dahua_event():
                 'password': MQTT_PASSWORD
             }
         )
-
+    topic_reset()
     return "Data forwarded to MQTT", 200
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=52345)
+    app.run(debug=False, host='0.0.0.0', port=52345)
