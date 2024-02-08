@@ -31,30 +31,9 @@ all_topics = [
     MQTT_TOPIC_SMD_CAR,
 ]
 
-
-def topic_reset():
-    for topic in all_topics:  # Sets MQTT state for all the topics as OFF
-        reset_payload = {
-            "state": "OFF",
-        }
-
-        publish.single(
-            topic=topic,
-            payload=json.dumps(reset_payload),
-            hostname=MQTT_BROKER,
-            port=MQTT_PORT,
-            auth={
-                'username': MQTT_USERNAME,
-                'password': MQTT_PASSWORD,
-            }
-        )
-    print("Topics reset success")
-
-
 app = Flask(__name__)
 
 print("Addon started. Listening...")
-topic_reset()
 
 
 @app.route(
@@ -142,7 +121,7 @@ def dahua_event():
                 'password': MQTT_PASSWORD
             }
         )
-    topic_reset()
+
     return "Data forwarded to MQTT", 200
 
 
