@@ -1,6 +1,6 @@
 name: "Dahua2MQTT"
 description: "Get the HTTP alarms from your Dahua NVR (or other) in Home Assistant's MQTT broker"
-version: "0.0.5"
+version: "0.0.6"
 slug: "dahua2mqtt"
 init: false
 arch:
@@ -13,7 +13,7 @@ arch:
 startup: services
 
 ports:
-  52346/tcp: 52346
+  52345/tcp: 52345
 
 options:
   mqtt_broker: "core-mosquitto"
