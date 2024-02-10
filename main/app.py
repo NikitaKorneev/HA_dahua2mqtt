@@ -2,13 +2,14 @@ from flask import Flask, request
 import paho.mqtt.publish as publish
 import os
 import json
-
+print("Init import")
 # Define the path to the options.json file to get user's inputs in Configuration section
 options_file_path = os.path.join(os.path.dirname(__file__), '../data/options.json')
 options = {}
 try:
     with open(options_file_path, 'r') as file:
         options = json.load(file)
+        print("Options are imported")
 except Exception as e:
     print(f"Error reading the options.json file: {e}")
     pass
