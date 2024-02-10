@@ -54,6 +54,7 @@ def dahua_event():
     data = request.json
 
     if data.get('Code') == 'SmartMotionHuman':
+        print("SMD - Human is a GO!")
         sensor_id = data["Index"]
         sensor_type = "human_detection"
         attributes = {}
