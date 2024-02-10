@@ -1,6 +1,6 @@
 name: "Dahua2MQTT"
 description: "Get the HTTP alarms from your Dahua NVR (or other) in Home Assistant's MQTT broker"
-version: "0.0.2"
+version: "0.0.3"
 slug: "dahua2mqtt"
 init: false
 arch:
@@ -13,23 +13,15 @@ arch:
 startup: services
 
 ports:
-  52345/tcp: 52345
+  52346/tcp: 52346
 
 options:
   mqtt_broker: "core-mosquitto"
   mqtt_port: 1883
   mqtt_username: ""
   mqtt_password: ""
-  mqtt_topic_face_recognized: "dahua2mqtt/face/recognized/state"
-  mqtt_topic_face_stranger: "dahua2mqtt/face/stranger/state"
-  mqtt_topic_smd_human: "dahua2mqtt/smd/human/state"
-  mqtt_topic_smd_car: "dahua2mqtt/smd/car/state"
 schema:
   mqtt_broker: str
   mqtt_port: port
   mqtt_username: str
   mqtt_password: password
-  mqtt_topic_face_recognized: str
-  mqtt_topic_face_stranger: str
-  mqtt_topic_smd_human: str
-  mqtt_topic_smd_car: str

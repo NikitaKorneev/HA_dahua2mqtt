@@ -18,112 +18,72 @@ MQTT_BROKER = options.get("mqtt_broker", "core-mosquitto")
 MQTT_PORT = options.get("mqtt_port", 1883)
 MQTT_USERNAME = options.get("mqtt_username", "mqtt")
 MQTT_PASSWORD = options.get("mqtt_password", "mqtt")
+AUTH = {
+    'username': MQTT_USERNAME,
+    'password': MQTT_PASSWORD,
+}
 
-# Main section that sets up topics for appropriate "AI" events from NVR according to add-on configuration
-MQTT_TOPIC_FACE_RECOGNIZED = options.get("mqtt_topic_face_recognized", "dahua2mqtt/face/recognized/state")
-MQTT_TOPIC_FACE_STRANGER = options.get("mqtt_topic_face_stranger", "dahua2mqtt/face/stranger/state")
-MQTT_TOPIC_SMD_HUMAN = options.get("mqtt_topic_smd_human", "dahua2mqtt/smd/human/state")
-MQTT_TOPIC_SMD_CAR = options.get("mqtt_topic_smd_car", "dahua2mqtt/smd/car/state")
-all_topics = [
-    MQTT_TOPIC_FACE_RECOGNIZED,
-    MQTT_TOPIC_FACE_STRANGER,
-    MQTT_TOPIC_SMD_HUMAN,
-    MQTT_TOPIC_SMD_CAR,
-]
+MQTT_DISCOVERY_PREFIX = 'homeassistant'
+
+
+# Function to publish MQTT discovery config
+def publish_discovery_config(component, sensor_type, sensor_id, attributes):
+    topic = f"{MQTT_DISCOVERY_PREFIX}/{component}/{sensor_type}_{sensor_id}/config"
+    payload = {
+        "name": f"{sensor_type.capitalize()} {sensor_id}",
+        "state_topic": f"dahua2mqtt/{sensor_type}/{sensor_id}/state",
+        "value_template": "{{ value_json.state }}",
+        "json_attributes_topic": f"dahua2mqtt/{sensor_type}/{sensor_id}/state",
+        "json_attributes_template": "{{ value_json.attributes | tojson }}",
+        "device_class": "motion",
+        "unique_id": f"dahua2mqtt_{sensor_type}_{sensor_id}"
+    }
+    for attribute in attributes:
+        payload[attribute] = attributes[attribute]
+
+    publish.single(topic, payload=json.dumps(payload),
+                   hostname=MQTT_BROKER, port=MQTT_PORT,
+                   auth={'username': MQTT_USERNAME, 'password': MQTT_PASSWORD})
+
 
 app = Flask(__name__)
 
-print("Addon started. Listening...")
 
-
-@app.route(
-    rule='/cgi-bin/NotifyEvent',
-    methods=['POST']
-)
+@app.route(rule='/cgi-bin/NotifyEvent', methods=['POST'])
 def dahua_event():
     data = request.json
-    # print(f"Received data: Action: {data.get('Action')}, {data.get('Code')}")  # For logging/debugging purposes
-    # FACE RECOGNITION SECTION
-    if data.get('Code') == 'FaceRecognition':
-        print("Face recognition event:", end='')
 
-        if data["Data"]["Candidates"]:  # Event if face is recognized
-            print("Person:", data['Data']['Candidates'][0]['Person']['Name'])
+    if data.get('Code') == 'SmartMotionHuman':
+        sensor_id = data["Index"]
+        sensor_type = "human_detection"
+        attributes = {}
 
-            # Create a payload for the MQTT message
-            recognised_face_payload = {
-                "state": "ON",  # Turn the binary sensor ON
-                "attributes": {  # Report name and similarity % as attributes
-                    "person_name": data['Data']['Candidates'][0]['Person']['Name'],
-                    "similarity": data['Data']['Candidates'][0]['Similarity']
-                }
-            }
-
-            # Publish the MQTT message
-            publish.single(
-                topic=MQTT_TOPIC_FACE_RECOGNIZED,
-                payload=json.dumps(recognised_face_payload),
-                hostname=MQTT_BROKER,
-                port=MQTT_PORT,
-                auth={
-                    'username': MQTT_USERNAME,
-                    'password': MQTT_PASSWORD,
-                }
-            )
-
-        else:  # Event if face is NOT recognized
-            print("Stranger detected", end='')
-            stranger_face_payload = {
-                "state": "ON",  # Turn the binary sensor ON
-            }
-            # Publish the MQTT message
-            publish.single(
-                topic=MQTT_TOPIC_FACE_STRANGER,
-                payload=json.dumps(stranger_face_payload),
-                hostname=MQTT_BROKER,
-                port=MQTT_PORT,
-                auth={
-                    'username': MQTT_USERNAME,
-                    'password': MQTT_PASSWORD,
-                }
-            )
-
-    elif data.get('Code') == 'SmartMotionHuman':
-        print("SMD human event")
-        smd_human_payload = {
-            "state": "ON",  # Turn the binary sensor ON
-        }
-
-        publish.single(
-            topic=MQTT_TOPIC_SMD_HUMAN,
-            payload=json.dumps(smd_human_payload),
-            hostname=MQTT_BROKER,
-            port=MQTT_PORT,
-            auth={
-                'username': MQTT_USERNAME,
-                'password': MQTT_PASSWORD,
-            }
+        publish_discovery_config(
+            "binary_sensor",
+            sensor_type,
+            sensor_id,
+            attributes,
         )
 
-    elif data.get('Code') == 'SmartMotionCar':
-        print("SMD car event")
-        smd_car_payload = {
-            "state": "ON",  # Turn the binary sensor ON
+        topic = f"dahua2mqtt/{sensor_type}/{sensor_id}/state"
+        payload = {
+            "state": "ON" if data.get("Action") == "Start" else "OFF",
+            "attributes": {
+                "StartTime": data["Data"]["StartTime"],
+                "Device id": data["Data"].get("uuid", "null"),
+            }
         }
 
         publish.single(
-            topic=MQTT_TOPIC_SMD_CAR,
-            payload=json.dumps(smd_car_payload),
+            topic=topic,
+            payload=json.dumps(payload),
             hostname=MQTT_BROKER,
             port=MQTT_PORT,
-            auth={
-                'username': MQTT_USERNAME,
-                'password': MQTT_PASSWORD
-            }
+            auth=AUTH,
         )
 
     return "Data forwarded to MQTT", 200
 
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=52345)
+    app.run(debug=True, host='0.0.0.0', port=52345)
