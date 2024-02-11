@@ -2,14 +2,13 @@ from flask import Flask, request
 import paho.mqtt.publish as publish
 import os
 import json
-print("Init import")
+
 # Define the path to the options.json file to get user's inputs in Configuration section
 options_file_path = os.path.join(os.path.dirname(__file__), '../data/options.json')
 options = {}
 try:
     with open(options_file_path, 'r') as file:
         options = json.load(file)
-        print("Options are imported")
 except Exception as e:
     print(f"Error reading the options.json file: {e}")
     pass
@@ -47,46 +46,86 @@ def publish_discovery_config(component, sensor_type, sensor_id, attributes):
                    auth={'username': MQTT_USERNAME, 'password': MQTT_PASSWORD})
 
 
+def smd2mqtt(data):
+    sensor_id = data.get("Index")
+    sensor_type = data.get("Code")
+    attributes = {}
+
+    publish_discovery_config(
+        "binary_sensor",
+        sensor_type,
+        sensor_id,
+        attributes,
+    )
+
+    topic = f"dahua2mqtt/{sensor_type}/{sensor_id}/state"
+    payload = {
+        "state": "ON" if data.get("Action") == "Start" else "OFF",
+        "attributes": {
+            "StartTime": data["Data"]["StartTime"],
+            "Device id": data["Data"].get("uuid", "null"),
+        }
+    }
+
+    publish.single(
+        topic=topic,
+        payload=json.dumps(payload),
+        hostname=MQTT_BROKER,
+        port=MQTT_PORT,
+        auth=AUTH,
+    )
+
+
+def fr2mqtt(data):
+    print(data)
+    sensor_id = data.get("Index")
+    sensor_type = data.get("Code")
+    attributes = {}  # TODO: identify what attributes are useful and how to get them to HA's MQTT.
+
+    publish_discovery_config(
+        "binary_sensor",
+        sensor_type,
+        sensor_id,
+        attributes,
+    )
+
+    topic = f"dahua2mqtt/{sensor_type}/{sensor_id}/state"
+    payload = {
+        "state": "ON" if data.get("Action") == "Start" else "OFF",
+        "attributes": {
+            "StartTime": data["Data"]["StartTime"],
+            "Device id": data["Data"].get("uuid", "null"),
+        }
+    }
+
+    publish.single(
+        topic=topic,
+        payload=json.dumps(payload),
+        hostname=MQTT_BROKER,
+        port=MQTT_PORT,
+        auth=AUTH,
+    )
+
+
 app = Flask(__name__)
 
 
 @app.route(rule='/cgi-bin/NotifyEvent', methods=['POST'])
 def dahua_event():
     data = request.json
-    print(data)
+    data_code = data.get("Code")
 
-    if data.get('Code') == 'SmartMotionHuman':
-        print("SMD - Human is a GO!")
-        sensor_id = data["Index"]
-        sensor_type = "human_detection"
-        attributes = {}
+    if data_code == 'SmartMotionHuman':
+        smd2mqtt(data)
 
-        publish_discovery_config(
-            "binary_sensor",
-            sensor_type,
-            sensor_id,
-            attributes,
-        )
+    if data_code == "SmartMotionCar":
+        smd2mqtt(data)
 
-        topic = f"dahua2mqtt/{sensor_type}/{sensor_id}/state"
-        payload = {
-            "state": "ON" if data.get("Action") == "Start" else "OFF",
-            "attributes": {
-                "StartTime": data["Data"]["StartTime"],
-                "Device id": data["Data"].get("uuid", "null"),
-            }
-        }
-
-        publish.single(
-            topic=topic,
-            payload=json.dumps(payload),
-            hostname=MQTT_BROKER,
-            port=MQTT_PORT,
-            auth=AUTH,
-        )
+    if data_code == "FaceRecognition":
+        fr2mqtt(data)
 
     return "Data forwarded to MQTT", 200
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=52345)
+    app.run(debug=False, host='0.0.0.0', port=52345)  # TODO: change port to the HA's config option.
