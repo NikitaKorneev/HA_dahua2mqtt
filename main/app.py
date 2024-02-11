@@ -80,7 +80,7 @@ def fr2mqtt(data):
     print(data)
     sensor_id = data.get("Index")
     sensor_type = data.get("Code")
-    attributes = {}  # TODO: identify what attributes are useful and how to get them to HA's MQTT.
+    attributes = {}
 
     publish_discovery_config(
         "binary_sensor",
@@ -93,8 +93,12 @@ def fr2mqtt(data):
     payload = {
         "state": "ON" if data.get("Action") == "Start" else "OFF",
         "attributes": {
+            "Person": data["Data"]["Candidates"][0]["Person"]["Name"],
+            "Similarity": data["Data"]["Candidates"][0]["Similarity"],
+            "CertificationType": data["Data"]["Candidates"][0]["Person"]["CertificateType"],
+            "ID": data["Data"]["Candidates"][0]["Person"]["ID"],
             "StartTime": data["Data"]["StartTime"],
-            "Device id": data["Data"].get("uuid", "null"),
+            "Device id": data["Data"].get("uuid", ""),
         }
     }
 
