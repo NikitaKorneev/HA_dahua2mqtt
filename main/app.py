@@ -77,7 +77,6 @@ def smd2mqtt(data):
 
 
 def fr2mqtt(data):
-    print(data)
     sensor_id = data.get("Index")
     sensor_type = data.get("Code")
     attributes = {}
@@ -117,6 +116,7 @@ app = Flask(__name__)
 @app.route(rule='/cgi-bin/NotifyEvent', methods=['POST'])
 def dahua_event():
     data = request.json
+    print(data)
     data_code = data.get("Code")
 
     if data_code == 'SmartMotionHuman':
