@@ -75,6 +75,8 @@ def smd2mqtt(data):
         auth=AUTH,
     )
 
+    print(f"Event registered: Cam{sensor_id} - {sensor_type}")
+
 
 def fr2mqtt(data):
     sensor_id = data.get("Index")
@@ -109,6 +111,8 @@ def fr2mqtt(data):
         auth=AUTH,
     )
 
+    print(f"Event registered: Cam{sensor_id} - {sensor_type}")
+
 
 app = Flask(__name__)
 
@@ -116,7 +120,7 @@ app = Flask(__name__)
 @app.route(rule='/cgi-bin/NotifyEvent', methods=['POST'])
 def dahua_event():
     data = request.json
-    print(data)
+
     data_code = data.get("Code")
 
     if data_code == 'SmartMotionHuman':
@@ -132,4 +136,4 @@ def dahua_event():
 
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=52345)  # TODO: change port to the HA's config option.
+    app.run(debug=False, host='0.0.0.0', port=52345)
