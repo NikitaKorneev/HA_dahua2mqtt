@@ -47,6 +47,6 @@ If you encounter any issues or have suggestions for improvement, please file an 
 
 ## Disclaimer
 This project is not affiliated with or endorsed by Dahua. It's a community-driven initiative to enhance Home Assistant integration.
-
+Logo and icon are made using DALI.
 ## License
 Dahua2MQTT is released under the Apache 2.0 License.
