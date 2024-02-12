@@ -1,4 +1,4 @@
-# Dahua2MQTT
+# Dahua2MQTT - Home Assistant add-on
 
 ## Overview
 Dahua2MQTT is a Home Assistant add-on designed to integrate Dahua surveillance systems with Home Assistant via MQTT. It enables real-time monitoring and handling of events such as face recognition and Smart Motion Detection (SMD) directly within Home Assistant. **This add-on listens for HTTP alarms from Dahua devices (NVRs, cameras, etc.) and publishes relevant events to Home Assistant's MQTT broker**, allowing for the creation of automation triggers based on these events.
