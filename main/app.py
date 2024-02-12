@@ -131,7 +131,7 @@ def dahua_event():
     if data_code == 'SmartMotionHuman':
         smd2mqtt(data)
 
-    if data_code == "SmartMotionCar":
+    if data_code == "SmartMotionVehicle":
         smd2mqtt(data)
 
     if data_code == "FaceRecognition":
