@@ -4,6 +4,7 @@ import os
 import json
 
 # Define the path to the options.json file to get user's inputs in Configuration section
+# This code gets user's inputs in the add-on.
 options_file_path = os.path.join(os.path.dirname(__file__), '../data/options.json')
 options = {}
 try:
@@ -13,7 +14,6 @@ except Exception as e:
     print(f"Error reading the options.json file: {e}")
     pass
 
-# mqtt broker options are set up from HA addon options
 MQTT_BROKER = options.get("mqtt_broker", "core-mosquitto")
 MQTT_PORT = options.get("mqtt_port", 1883)
 MQTT_USERNAME = options.get("mqtt_username", "mqtt")
@@ -46,6 +46,9 @@ def publish_discovery_config(component, sensor_type, sensor_id, attributes):
                    auth={'username': MQTT_USERNAME, 'password': MQTT_PASSWORD})
 
 
+# takes data from Dahua's HTTP alarm
+# sends it to HA's MQTT discovery for the smart motion detection event
+# sends it as MQTT topic with updated states
 def smd2mqtt(data):
     sensor_id = data.get("Index")
     sensor_type = data.get("Code")
@@ -77,7 +80,9 @@ def smd2mqtt(data):
 
     print(f"Event registered: Cam{sensor_id} - {sensor_type}")
 
-
+# takes data from Dahua's HTTP alarm
+# sends it to HA's MQTT discovery for the face recognition event
+# sends it as MQTT topic with updated states
 def fr2mqtt(data):
     sensor_id = data.get("Index")
     sensor_type = data.get("Code")
