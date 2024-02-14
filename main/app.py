@@ -54,13 +54,6 @@ def smd2mqtt(data):
     sensor_type = data.get("Code")
     attributes = {}
 
-    publish_discovery_config(
-        "binary_sensor",
-        sensor_type,
-        sensor_id,
-        attributes,
-    )
-
     topic = f"dahua2mqtt/{sensor_type}/{sensor_id}/state"
     payload = {
         "state": "ON" if data.get("Action") == "Start" else "OFF",
@@ -78,6 +71,13 @@ def smd2mqtt(data):
         auth=AUTH,
     )
 
+    publish_discovery_config(
+        "binary_sensor",
+        sensor_type,
+        sensor_id,
+        attributes,
+    )
+
     print(f"Event registered: Cam{sensor_id} - {sensor_type}")
 
 # takes data from Dahua's HTTP alarm
@@ -87,13 +87,6 @@ def fr2mqtt(data):
     sensor_id = data.get("Index")
     sensor_type = data.get("Code")
     attributes = {}
-
-    publish_discovery_config(
-        "binary_sensor",
-        sensor_type,
-        sensor_id,
-        attributes,
-    )
 
     topic = f"dahua2mqtt/{sensor_type}/{sensor_id}/state"
     payload = {
@@ -114,6 +107,13 @@ def fr2mqtt(data):
         hostname=MQTT_BROKER,
         port=MQTT_PORT,
         auth=AUTH,
+    )
+
+    publish_discovery_config(
+        "binary_sensor",
+        sensor_type,
+        sensor_id,
+        attributes,
     )
 
     print(f"Event registered: Cam{sensor_id} - {sensor_type}")
