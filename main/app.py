@@ -107,6 +107,7 @@ def fr2mqtt(data):
         hostname=MQTT_BROKER,
         port=MQTT_PORT,
         auth=AUTH,
+        retain=True,
     )
 
     publish_discovery_config(
@@ -117,6 +118,30 @@ def fr2mqtt(data):
     )
 
     print(f"Event registered: Cam{sensor_id} - {sensor_type}")
+
+
+def initialize_sensors():
+    sensors = [("binary_sensor", "SmartMotionHuman", "smartmotionhuman_0"),
+               ("binary_sensor", "SmartMotionHuman", "smartmotionhuman_2"),
+               ("binary_sensor", "SmartMotionHuman", "smartmotionhuman_3"),
+               ("binary_sensor", "SmartMotionHuman", "smartmotionhuman_5"),
+               ("binary_sensor", "SmartMotionVehicle", "smartmotionvehicle_5"),
+               ("binary_sensor", "FaceRecognition", "facerecognition_7")]
+
+    for component, sensor_type, sensor_id in sensors:
+        topic = f"dahua2mqtt/{sensor_type}/{sensor_id}/state"
+        payload = {
+            "state": "OFF",  # Initialize state to "OFF"
+            "attributes": {}
+        }
+        publish.single(
+            topic=topic,
+            payload=json.dumps(payload),
+            hostname=MQTT_BROKER,
+            port=MQTT_PORT,
+            auth=AUTH,
+            retain=True
+        )
 
 
 app = Flask(__name__)
@@ -141,4 +166,5 @@ def dahua_event():
 
 
 if __name__ == '__main__':
+    initialize_sensors()
     app.run(debug=False, host='0.0.0.0', port=52345)
