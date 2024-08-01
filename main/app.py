@@ -46,7 +46,7 @@ def publish_discovery_config(component, sensor_type, sensor_id, attributes):
                    auth={'username': MQTT_USERNAME, 'password': MQTT_PASSWORD})
 
 
-# takes data from Dahua's HTTP alarm
+# takes data from Dahua HTTP alarm
 # sends it to HA's MQTT discovery for the smart motion detection event
 # sends it as MQTT topic with updated states
 def smd2mqtt(data):
@@ -80,9 +80,11 @@ def smd2mqtt(data):
 
     print(f"Event registered: Cam{sensor_id} - {sensor_type}")
 
-# takes data from Dahua's HTTP alarm
+# takes data from Dahua HTTP alarm
 # sends it to HA's MQTT discovery for the face recognition event
 # sends it as MQTT topic with updated states
+
+
 def fr2mqtt(data):
     sensor_id = data.get("Index")
     sensor_type = data.get("Code")
@@ -141,4 +143,4 @@ def dahua_event():
 
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=52345)
+    app.run(debug=True, host='0.0.0.0', port=52345)
