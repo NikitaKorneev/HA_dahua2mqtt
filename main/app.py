@@ -124,10 +124,10 @@ def fr2mqtt(data):
 app = Flask(__name__)
 
 
-@app.route(rule='/cgi-bin/NotifyEvent', methods=['POST'])
+@app.route(rule='/cgi-bin/NotifyEvent', methods=['POST'])  # cgi-bin/NotifyEvent
 def dahua_event():
     data = request.json
-
+    print(data)
     data_code = data.get("Code")
 
     if data_code == 'SmartMotionHuman':
@@ -143,4 +143,4 @@ def dahua_event():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=52345)
+    app.run(debug=False, host='0.0.0.0', port=52345)
