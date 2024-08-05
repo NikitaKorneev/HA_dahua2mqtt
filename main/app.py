@@ -46,7 +46,7 @@ def publish_discovery_config(component, sensor_type, sensor_id, attributes):
                    auth={'username': MQTT_USERNAME, 'password': MQTT_PASSWORD})
 
 
-# takes data from Dahua HTTP alarm
+# takes data from Dahua's HTTP alarm
 # sends it to HA's MQTT discovery for the smart motion detection event
 # sends it as MQTT topic with updated states
 def smd2mqtt(data):
@@ -80,11 +80,9 @@ def smd2mqtt(data):
 
     print(f"Event registered: Cam{sensor_id} - {sensor_type}")
 
-# takes data from Dahua HTTP alarm
+# takes data from Dahua's HTTP alarm
 # sends it to HA's MQTT discovery for the face recognition event
 # sends it as MQTT topic with updated states
-
-
 def fr2mqtt(data):
     sensor_id = data.get("Index")
     sensor_type = data.get("Code")
@@ -109,6 +107,7 @@ def fr2mqtt(data):
         hostname=MQTT_BROKER,
         port=MQTT_PORT,
         auth=AUTH,
+        retain=True,
     )
 
     publish_discovery_config(
@@ -121,13 +120,37 @@ def fr2mqtt(data):
     print(f"Event registered: Cam{sensor_id} - {sensor_type}")
 
 
+def initialize_sensors():
+    sensors = [("binary_sensor", "SmartMotionHuman", "smartmotionhuman_0"),
+               ("binary_sensor", "SmartMotionHuman", "smartmotionhuman_2"),
+               ("binary_sensor", "SmartMotionHuman", "smartmotionhuman_3"),
+               ("binary_sensor", "SmartMotionHuman", "smartmotionhuman_5"),
+               ("binary_sensor", "SmartMotionVehicle", "smartmotionvehicle_5"),
+               ("binary_sensor", "FaceRecognition", "facerecognition_7")]
+
+    for component, sensor_type, sensor_id in sensors:
+        topic = f"dahua2mqtt/{sensor_type}/{sensor_id}/state"
+        payload = {
+            "state": "OFF",  # Initialize state to "OFF"
+            "attributes": {}
+        }
+        publish.single(
+            topic=topic,
+            payload=json.dumps(payload),
+            hostname=MQTT_BROKER,
+            port=MQTT_PORT,
+            auth=AUTH,
+            retain=True
+        )
+
+
 app = Flask(__name__)
 
 
-@app.route(rule='/cgi-bin/NotifyEvent', methods=['POST'])  # cgi-bin/NotifyEvent
+@app.route(rule='/cgi-bin/NotifyEvent', methods=['POST'])
 def dahua_event():
     data = request.json
-    print(data)
+
     data_code = data.get("Code")
 
     if data_code == 'SmartMotionHuman':
@@ -143,4 +166,5 @@ def dahua_event():
 
 
 if __name__ == '__main__':
+    initialize_sensors()
     app.run(debug=False, host='0.0.0.0', port=52345)
