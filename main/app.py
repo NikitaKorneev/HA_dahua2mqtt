@@ -20,14 +20,13 @@ MQTT_BROKER = options.get("mqtt_broker", "core-mosquitto")
 MQTT_PORT = options.get("mqtt_port", 1883)
 MQTT_USERNAME = options.get("mqtt_username", "mqtt")
 MQTT_PASSWORD = options.get("mqtt_password", "mqtt")
+NVR_HTTP_PORT = options.get("nvr_http_port")
 AUTH = {
     'username': MQTT_USERNAME,
     'password': MQTT_PASSWORD,
 }
 
 MQTT_DISCOVERY_PREFIX = 'homeassistant'
-
-NVR_PORT = options.get("")
 
 
 # Function to publish MQTT discovery config
@@ -180,4 +179,4 @@ def dahua_event():
 
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=52345)
+    app.run(debug=False, host='0.0.0.0', port=NVR_HTTP_PORT)
