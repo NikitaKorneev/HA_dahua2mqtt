@@ -6,6 +6,7 @@ import json
 # Define the path to the options.json file to get user's inputs in Configuration section
 # This code gets user's inputs in the add-on.
 options_file_path = os.path.join(os.path.dirname(__file__), '../data/options.json')
+print(os.listdir("../data/"))
 options = {}
 try:
     with open(options_file_path, 'r') as file:
