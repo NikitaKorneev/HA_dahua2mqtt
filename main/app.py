@@ -15,8 +15,6 @@ except Exception as e:
     print(f"Error reading the options.json file: {e}")
     pass
 
-print(options)
-
 MQTT_BROKER = options.get("mqtt_broker", "core-mosquitto")
 MQTT_PORT = options.get("mqtt_port", 1883)
 MQTT_USERNAME = options.get("mqtt_username", "mqtt")

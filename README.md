@@ -18,7 +18,7 @@ To use Dahua2MQTT, you'll need:
 ## Getting Started
 1. **Install the Add-on**: Follow the standard procedure to install this add-on in Home Assistant.
 2. **Configure MQTT**: Ensure your MQTT broker is correctly set up in Home Assistant and note the credentials.
-3. **Add-on Configuration**: Input your MQTT broker details, including credentials.
+3. **Add-on Configuration**: Input your MQTT broker credentials and **ports in both config and port sections.**
 4. **NVR setup**: Make sure Alarm Center in Settings/Network/Alarm Center/HTTP is configured and HTTP alarm is turned ON on all the cameras you need.
 
 ## Usage
