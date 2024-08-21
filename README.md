@@ -30,7 +30,6 @@ All the channels that spot these events would appear in your HA entities list as
 - Face recognition:
   - Facerecognition_\<channelNo>
 
-**MIND THAT CHANNELS START FROM 0!** So NVR's channel 1 would be binary_sensor.Smartmotioncar_0
 ## Contributing
 Dahua2MQTT is an open-source project, and contributions are warmly welcomed! Whether you're looking to fix bugs, add new features, or improve documentation, your help is appreciated. Please feel free to fork the repository, make your changes, and submit a pull request.
 

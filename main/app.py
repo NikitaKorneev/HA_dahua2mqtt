@@ -46,11 +46,11 @@ def publish_discovery_config(component, sensor_type, sensor_id, attributes):
                    auth={'username': MQTT_USERNAME, 'password': MQTT_PASSWORD})
 
 
-# takes data from Dahua's HTTP alarm
+# takes data from Dahua HTTP alarm
 # sends it to HA's MQTT discovery for the smart motion detection event
 # sends it as MQTT topic with updated states
 def smd2mqtt(data):
-    sensor_id = data.get("Index")
+    sensor_id = str(int(data.get("Index")) + 1)
     sensor_type = data.get("Code")
     attributes = {}
 
@@ -59,7 +59,8 @@ def smd2mqtt(data):
         "state": "ON" if data.get("Action") == "Start" else "OFF",
         "attributes": {
             "StartTime": data["Data"]["StartTime"],
-            "Device id": data["Data"].get("uuid", "null"),
+            "Device IP": data["Data"].get("IP", "null"),
+            "Channel": int(data["Index"]) + 1
         }
     }
 
@@ -80,11 +81,13 @@ def smd2mqtt(data):
 
     print(f"Event registered: Cam{sensor_id} - {sensor_type}")
 
-# takes data from Dahua's HTTP alarm
+# takes data from Dahua HTTP alarm
 # sends it to HA's MQTT discovery for the face recognition event
 # sends it as MQTT topic with updated states
+
+
 def fr2mqtt(data):
-    sensor_id = data.get("Index")
+    sensor_id = str(int(data.get("Index")) + 1)
     sensor_type = data.get("Code")
     attributes = {}
 
@@ -119,14 +122,43 @@ def fr2mqtt(data):
     print(f"Event registered: Cam{sensor_id} - {sensor_type}")
 
 
+def fd2mqtt(data):
+    sensor_id = str(int(data.get("Index") + 1))
+    sensor_type = data.get("Code")
+    attributes = {}
+
+    topic = f"dahua2mqtt/{sensor_type}/{sensor_id}/state"
+    payload = {
+        "state": "ON" if data.get("Action") == "Start" else "OFF",
+        "attributes": {}
+    }
+
+    publish.single(
+        topic=topic,
+        payload=json.dumps(payload),
+        hostname=MQTT_BROKER,
+        port=MQTT_PORT,
+        auth=AUTH,
+    )
+
+    publish_discovery_config(
+        "binary_sensor",
+        sensor_type,
+        sensor_id,
+        attributes,
+    )
+
+    print(f"Event registered: Cam{sensor_id} - {sensor_type}")
+
+
 app = Flask(__name__)
 
 
 @app.route(rule='/cgi-bin/NotifyEvent', methods=['POST'])
 def dahua_event():
     data = request.json
-    print(data)
     data_code = data.get("Code")
+    print(data_code, data["Index"])
 
     if data_code == 'SmartMotionHuman':
         smd2mqtt(data)
@@ -136,6 +168,9 @@ def dahua_event():
 
     if data_code == "FaceRecognition":
         fr2mqtt(data)
+
+    if data_code == "FaceDetection":
+        fd2mqtt(data)
 
     return "Data forwarded to MQTT", 200
 
